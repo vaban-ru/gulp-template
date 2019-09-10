@@ -1,0 +1,35 @@
+{
+	"name": "gulp-sass-template",
+	"version": "v0.1.0",
+	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
+	"scripts": {
+		"start": "sudo gulp"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.4.3",
+		"@babel/preset-env": "^7.4.3",
+		"autoprefixer": "^9.5.0",
+		"babel-preset-latest": "^6.24.1",
+		"browser-sync": "^2.26.3",
+		"cssnano": "^4.1.10",
+		"del": "^4.0.0",
+		"gulp": "^4.0.0",
+		"gulp-babel": "^8.0.0-beta.2",
+		"gulp-changed": "^3.2.0",
+		"gulp-cli": "^2.0.1",
+		"gulp-concat": "^2.6.1",
+		"gulp-file-include": "^2.0.1",
+		"gulp-imagemin": "^5.0.3",
+		"gulp-postcss": "^8.0.0",
+		"gulp-prettier": "^2.1.0",
+		"gulp-sass": "^4.0.2",
+		"gulp-uglify": "^3.0.2",
+		"gulp-watch": "^5.0.1",
+		"imagemin-jpegtran": "^6.0.0",
+		"imagemin-pngquant": "^7.0.0",
+		"jquery": "^3.3.1"
+	},
+	"dependencies": {
+		"gulp-jsbeautifier": "^3.0.1"
+	}
+}
