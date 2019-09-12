@@ -1,9 +1,10 @@
 {
-	"name": "gulp-sass-template",
+	"name": "gulp-template",
 	"version": "v0.1.0",
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
 	"scripts": {
-		"start": "sudo gulp"
+		"start": "gulp",
+		"build": "gulp build"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.4.3",
