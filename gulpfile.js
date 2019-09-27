@@ -54,22 +54,17 @@ function htmlProcess() {
 		.pipe(gulp.dest('./dist/'));
 }
 
-// Работа с картинками (обрабатываются только измененные картинки)
+// Работа с картинками
 function imgProcess() {
 	return gulp
 		.src('src/img/**/*.*')
 		.pipe(changed('dist/img/'))
-		.pipe(imagemin([
-			imagemin.gifsicle({interlaced: true}),
-			imagemin.jpegtran({progressive: true}),
-			imagemin.optipng({optimizationLevel: 5}),
-			imagemin.svgo({
-				plugins: [
-					{removeViewBox: true},
-					{cleanupIDs: false}
-				]
-			})
-		]))
+		.pipe(gulp.dest('dist/img/'));
+}
+
+function imgProcessBuild() {
+	return gulp
+		.src('src/img/**/*.*')
 		.pipe(gulp.dest('dist/img/'));
 }
 
@@ -77,17 +72,12 @@ function imagesProcess() {
 	return gulp
 		.src('src/images/**/*.*')
 		.pipe(changed('dist/images/'))
-		.pipe(imagemin([
-			imagemin.gifsicle({interlaced: true}),
-			imagemin.jpegtran({progressive: true}),
-			imagemin.optipng({optimizationLevel: 5}),
-			imagemin.svgo({
-				plugins: [
-					{removeViewBox: true},
-					{cleanupIDs: false}
-				]
-			})
-		]))
+		.pipe(gulp.dest('dist/images/'));
+}
+
+function imagesProcessBuild() {
+	return gulp
+		.src('src/images/**/*.*')
 		.pipe(gulp.dest('dist/images/'));
 }
 
@@ -153,10 +143,15 @@ function watchFiles() {
 // Определение основных переменных
 const build = gulp.series(
 	clean,
+	gulp.parallel(htmlProcess,cssProcess,scssProcess,libsJsProcess,jsProcess,fontsProcess,imgProcessBuild,imagesProcessBuild)
+);
+
+const watchEvent = gulp.series(
+	clean,
 	gulp.parallel(htmlProcess,cssProcess,scssProcess,libsJsProcess,jsProcess,fontsProcess,imgProcess,imagesProcess)
 );
 
-const watch = gulp.parallel(build, watchFiles, browserSyncInit);
+const watch = gulp.parallel(watchEvent, watchFiles, browserSyncInit);
 
 // Экспорт
 exports.build = build;
