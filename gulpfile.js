@@ -3,7 +3,6 @@
 const gulp = require('gulp');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
-const imagemin = require('gulp-imagemin');
 const sass = require('gulp-sass');
 const del = require('del');
 const autoprefixer = require('autoprefixer');
@@ -15,6 +14,7 @@ const changed = require('gulp-changed');
 const fileinclude = require('gulp-file-include');
 const prettier = require('gulp-prettier');
 const beautify = require('gulp-jsbeautifier');
+const sourcemaps = require('gulp-sourcemaps');
 
 // Очистка папки dist
 function clean() {
@@ -101,9 +101,11 @@ function scssProcess() {
 	var plugins = [autoprefixer()];
 	return gulp
 		.src(['src/sass/app.scss'])
+		.pipe(sourcemaps.init())
 		.pipe(sass())
 		.pipe(postcss(plugins))
 		.pipe(prettier({ singleQuote: true }))
+		.pipe(sourcemaps.write('./maps'))
 		.pipe(gulp.dest('./dist/css'));
 }
 
