@@ -4,7 +4,8 @@
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
 	"scripts": {
 		"start": "gulp",
-		"build": "gulp build"
+		"build": "gulp build",
+		"dev": "gulp dev"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.4.3",
@@ -20,7 +21,7 @@
 		"gulp-cli": "^2.0.1",
 		"gulp-concat": "^2.6.1",
 		"gulp-file-include": "^2.0.1",
-		"gulp-imagemin": "^5.0.3",
+		"gulp-imagemin": "^6.2.0",
 		"gulp-postcss": "^8.0.0",
 		"gulp-prettier": "^2.1.0",
 		"gulp-sass": "^4.0.2",
@@ -30,6 +31,8 @@
 	},
 	"dependencies": {
 		"gulp-jsbeautifier": "^3.0.1",
-		"gulp-sourcemaps": "^2.6.5"
+		"gulp-sourcemaps": "^2.6.5",
+		"gulp-webp": "^4.0.1",
+		"imagemin-mozjpeg": "^8.0.0"
 	}
 }
