@@ -187,7 +187,7 @@ function watchFiles() {
     gulp.watch('src/sass/**/*.*', gulp.series(scssProcess, browserSyncReload));
     gulp.watch('src/js/!(app)*.js', gulp.series(libsJsProcess, browserSyncReload));
     gulp.watch('src/js/app.js', gulp.series(jsProcess, browserSyncReload));
-    gulp.watch('src/img/**/*.*', gulp.series(imgProcess, browserSyncReload));
+    gulp.watch('src/img/**/*.*', gulp.series(imgProcessWatch, browserSyncReload));
     gulp.watch('src/fonts/*.*', gulp.series(fontsProcess, browserSyncReload));
 }
 
