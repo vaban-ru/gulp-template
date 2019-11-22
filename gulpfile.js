@@ -83,31 +83,6 @@ function imgProcessBuild() {
         .pipe(gulp.dest('dist/img/'));
 }
 
-// Работа с картинками
-function imagesProcess() {
-    return gulp
-        .src('src/images/**/*.*')
-        .pipe(changed('dist/images/'))
-        .pipe(imagemin([
-            imageminMozjpeg({
-                quality: 90
-            })
-        ]))
-        .pipe(gulp.dest('dist/images/'));
-}
-
-// Работа с картинками для Production
-function imagesProcessBuild() {
-    return gulp
-        .src('src/images/**/*.*')
-        .pipe(imagemin([
-            imageminMozjpeg({
-                quality: 90
-            })
-        ]))
-        .pipe(gulp.dest('dist/images/'));
-}
-
 // Копирование шрифтов
 function fontsProcess() {
     return gulp.src(['src/fonts/**/*']).pipe(gulp.dest('./dist/fonts'));
@@ -194,17 +169,17 @@ function watchFiles() {
 // Определение основных переменных
 const build = gulp.series(
     clean,
-    gulp.parallel(htmlProcess, cssProcess, scssProcessBuild, libsJsProcess, jsProcessBuild, fontsProcess, imgProcessBuild, imgProcessWebp, imagesProcessBuild)
+    gulp.parallel(htmlProcess, cssProcess, scssProcessBuild, libsJsProcess, jsProcessBuild, fontsProcess, imgProcessBuild, imgProcessWebp)
 );
 
 const dev = gulp.series(
     clean,
-    gulp.parallel(htmlProcess, cssProcess, scssProcess, libsJsProcess, jsProcess, fontsProcess, imgProcessBuild, imgProcessWebp, imagesProcess)
+    gulp.parallel(htmlProcess, cssProcess, scssProcess, libsJsProcess, jsProcess, fontsProcess, imgProcessBuild, imgProcessWebp)
 );
 
 const watchEvent = gulp.series(
     clean,
-    gulp.parallel(htmlProcess, cssProcess, scssProcess, libsJsProcess, jsProcess, fontsProcess, imgProcessWatch, imagesProcess)
+    gulp.parallel(htmlProcess, cssProcess, scssProcess, libsJsProcess, jsProcess, fontsProcess, imgProcessWatch)
 );
 
 const watch = gulp.parallel(watchEvent, watchFiles, browserSyncInit);
