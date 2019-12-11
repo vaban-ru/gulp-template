@@ -12,12 +12,12 @@ const imagemin = require('gulp-imagemin');
 const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
 const changed = require('gulp-changed');
-const fileinclude = require('gulp-file-include');
 const prettier = require('gulp-prettier');
 const beautify = require('gulp-jsbeautifier');
 const sourcemaps = require('gulp-sourcemaps');
 const webp = require('gulp-webp');
 const imageminMozjpeg = require('imagemin-mozjpeg');
+const nunjucks = require('gulp-nunjucks');
 
 // Очистка папки dist
 function clean() {
@@ -48,12 +48,7 @@ function browserSyncReload(done) {
 function htmlProcess() {
     return gulp
         .src(['src/*.html'])
-        .pipe(
-            fileinclude({
-                prefix: '@@',
-                basepath: '@file',
-            })
-        )
+        .pipe(nunjucks.compile())
         .pipe(gulp.dest('./dist/'));
 }
 

@@ -1,6 +1,6 @@
 {
 	"name": "gulp-template",
-	"version": "v0.1.0",
+	"version": "v0.2.0",
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
 	"scripts": {
 		"start": "gulp",
@@ -20,7 +20,6 @@
 		"gulp-changed": "^3.2.0",
 		"gulp-cli": "^2.0.1",
 		"gulp-concat": "^2.6.1",
-		"gulp-file-include": "^2.0.1",
 		"gulp-imagemin": "^6.2.0",
 		"gulp-postcss": "^8.0.0",
 		"gulp-prettier": "^2.1.0",
@@ -31,6 +30,7 @@
 	},
 	"dependencies": {
 		"gulp-jsbeautifier": "^3.0.1",
+		"gulp-nunjucks": "^5.0.1",
 		"gulp-sourcemaps": "^2.6.5",
 		"gulp-webp": "^4.0.1",
 		"imagemin-mozjpeg": "^8.0.0"
