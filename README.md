@@ -25,11 +25,15 @@ gulp-template
 ├── gulpfile.js
 ├── .babelrc
 ├── .browserslistrc
+├── .prettierrc
+├── .prettierignore
 └── .gitignore
 ```
 
 * Корень папки:
     * ```.babelrc``` — настройки Babel
+    * ```.prettierrc``` — настройки Prettier
+    * ```.prettierignore``` — запрет изменения файлов Prettier
     * ```.gitignore``` – запрет на отслеживание файлов Git'ом
     * ```package.json``` — список зависимостей
     * ```README.md``` — описание проекта
