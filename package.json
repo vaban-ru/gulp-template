@@ -2,6 +2,7 @@
 	"name": "gulp-template",
 	"version": "v0.2.0",
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
+	"license": "MIT",
 	"scripts": {
 		"start": "gulp",
 		"build": "gulp build",
@@ -33,6 +34,28 @@
 		"gulp-nunjucks": "^5.0.1",
 		"gulp-sourcemaps": "^2.6.5",
 		"gulp-webp": "^4.0.1",
-		"imagemin-mozjpeg": "^8.0.0"
+		"husky": "^4.0.6",
+		"imagemin-mozjpeg": "^8.0.0",
+		"lint-staged": "^9.5.0",
+		"prettier": "^1.19.1"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.js": [
+			"prettier --write",
+			"git add"
+		],
+		"*.css": [
+			"prettier --write",
+			"git add"
+		],
+		"*.scss": [
+			"prettier --write",
+			"git add"
+		]
 	}
 }
