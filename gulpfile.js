@@ -15,172 +15,235 @@ const changed = require('gulp-changed');
 const prettier = require('gulp-prettier');
 const beautify = require('gulp-jsbeautifier');
 const sourcemaps = require('gulp-sourcemaps');
-const webp = require('gulp-webp');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const nunjucks = require('gulp-nunjucks');
 
-// Очистка папки dist
+/**
+ * Основные переменные
+ * @type {{src: string, dist: string}}
+ */
+const paths = {
+  dist: './dist',
+  src: './src',
+  maps: './maps',
+};
+
+const src = {
+  html: paths.src + '/*.html',
+  img: paths.src + '/img/**/*.*',
+  css: paths.src + '/css',
+  scss: paths.src + '/sass',
+  js: paths.src + '/js',
+  fonts: paths.src + '/fonts',
+};
+
+const dist = {
+  img: paths.dist + '/img/',
+  css: paths.dist + '/css/',
+  js: paths.dist + '/js/',
+  fonts: paths.dist + '/fonts/',
+};
+
+/**
+ * Получение аргументов командной строки
+ * @type {{}}
+ */
+const arg = ((argList) => {
+  let arg = {},
+    a,
+    opt,
+    thisOpt,
+    curOpt;
+  for (a = 0; a < argList.length; a++) {
+    thisOpt = argList[a].trim();
+    opt = thisOpt.replace(/^\-+/, '');
+
+    if (opt === thisOpt) {
+      // argument value
+      if (curOpt) arg[curOpt] = opt;
+      curOpt = null;
+    } else {
+      // argument name
+      curOpt = opt;
+      arg[curOpt] = true;
+    }
+  }
+
+  return arg;
+})(process.argv);
+
+/**
+ * Очистка папки dist перед сборкой
+ * @returns {Promise<string[]> | *}
+ */
 function clean() {
-    return del(['./dist']);
+  return del([paths.dist]);
 }
 
-// Инициализация веб-сервера
+/**
+ * Инициализация веб-сервера browserSync
+ * @param done
+ */
 function browserSyncInit(done) {
-    browserSync.init({
-        server: {
-            baseDir: './dist',
-        },
-        // tunnel: true,
-        host: 'localhost',
-        port: 9000,
-        logPrefix: 'Webit_Dev',
-    });
-    done();
+  browserSync.init({
+    server: {
+      baseDir: paths.dist,
+    },
+    host: 'localhost',
+    port: 9000,
+    logPrefix: 'log',
+  });
+  done();
 }
 
-// Функция перезагрузки страницы
+/**
+ * Функция перезагрузки страницы при разработке
+ * @param done
+ */
 function browserSyncReload(done) {
-    browserSync.reload();
-    done();
+  browserSync.reload();
+  done();
 }
 
-// Шаблонизация и склейка HTML
+/**
+ * Копирование шрифтов
+ * @param folder
+ * @returns {*}
+ */
+function copyFonts() {
+  return gulp.src([src.fonts + '/**/*']).pipe(gulp.dest(dist.fonts));
+}
+
+/**
+ * Шаблонизация и склейка HTML
+ * @returns {*}
+ */
 function htmlProcess() {
+  return gulp
+    .src([src.html])
+    .pipe(nunjucks.compile())
+    .pipe(gulp.dest(paths.dist));
+}
+
+/**
+ * Копирование картинок в dist или оптимизация при финишной сборке
+ * @param isBuild
+ * @returns {*}
+ */
+function imgProcess() {
+  if (arg.production === 'true') {
     return gulp
-        .src(['src/*.html'])
-        .pipe(nunjucks.compile())
-        .pipe(gulp.dest('./dist/'));
-}
-
-function imgProcessWebp() {
+      .src(src.img)
+      .pipe(
+        imagemin([
+          imageminMozjpeg({
+            quality: 90,
+          }),
+        ]),
+      )
+      .pipe(gulp.dest(dist.img));
+  } else {
     return gulp
-        .src('src/img/**/*.*')
-        .pipe(webp())
-        .pipe(gulp.dest('dist/img/'));
+      .src(src.img)
+      .pipe(changed(dist.img))
+      .pipe(gulp.dest(dist.img));
+  }
 }
 
-function imgProcessWatch() {
-    return gulp
-        .src('src/img/**/*.*')
-        .pipe(changed('dist/img/'))
-        .pipe(gulp.dest('dist/img/'));
-}
-
-// Работа с картинками для Production
-function imgProcessBuild() {
-    return gulp
-        .src('src/img/**/*.*')
-        .pipe(imagemin([
-            imageminMozjpeg({
-                quality: 90
-            })
-        ]))
-        .pipe(gulp.dest('dist/img/'));
-}
-
-// Копирование шрифтов
-function fontsProcess() {
-    return gulp.src(['src/fonts/**/*']).pipe(gulp.dest('./dist/fonts'));
-}
-
-// Склейка и минификация CSS
+/**
+ * Склейка и обработка css файлов
+ * @returns {*}
+ */
 function cssProcess() {
-    var plugins = [autoprefixer(), cssnano()];
-    return gulp
-        .src(['src/css/reset.css', 'src/css/grid.css', 'src/css/**/*.*'])
-        .pipe(concat('libs.min.css'))
-        .pipe(postcss(plugins))
-        .pipe(gulp.dest('./dist/css'));
+  const plugins = [autoprefixer(), cssnano()];
+  return gulp
+    .src([src.css + '/reset.css', src.css + '/grid.css', src.css + '/**/*.*'])
+    .pipe(concat('libs.min.css'))
+    .pipe(postcss(plugins))
+    .pipe(gulp.dest(dist.css));
 }
 
-// Компиляция SASS
+/**
+ * Склейка и обработка scss файлов без минификации
+ * Минификации нет, так как дальше эта верстка отдаётся бэкендеру для натяжки на CMS
+ * @param isBuild
+ * @returns {*}
+ */
 function scssProcess() {
-    var plugins = [autoprefixer()];
+  const plugins = [autoprefixer()];
+  if (arg.production === 'true') {
     return gulp
-        .src(['src/sass/app.scss'])
-        .pipe(sourcemaps.init())
-        .pipe(sass())
-        .pipe(postcss(plugins))
-        .pipe(prettier({singleQuote: true}))
-        .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest('./dist/css'));
+      .src([src.scss + '/app.scss'])
+      .pipe(sass())
+      .pipe(postcss(plugins))
+      .pipe(prettier({ singleQuote: true }))
+      .pipe(gulp.dest(dist.css));
+  } else {
+    return gulp
+      .src([src.scss + '/app.scss'])
+      .pipe(sourcemaps.init())
+      .pipe(sass())
+      .pipe(postcss(plugins))
+      .pipe(sourcemaps.write(paths.maps))
+      .pipe(gulp.dest(dist.css));
+  }
 }
 
-// Компиляция SASS  для Production
-function scssProcessBuild() {
-    var plugins = [autoprefixer(),cssnano()];
-    return gulp
-        .src(['src/sass/app.scss'])
-        .pipe(sass())
-        .pipe(postcss(plugins))
-        .pipe(gulp.dest('./dist/css'));
-}
-
-// Склейка и минификация JS библиотек
+/**
+ * Склейка JS библиотек с минификацией и babel
+ * @returns {*}
+ */
 function libsJsProcess() {
-    return gulp
-        .src([
-            'node_modules/jquery/dist/jquery.min.js',
-            'src/js/!(app)*.js',
-        ])
-        .pipe(concat('libs.min.js'))
-        .pipe(babel())
-        .pipe(uglify())
-        .pipe(gulp.dest('./dist/js'));
+  return gulp
+    .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
+    .pipe(concat('libs.min.js'))
+    .pipe(babel())
+    .pipe(uglify())
+    .pipe(gulp.dest(dist.js));
 }
 
-// Склейка пользовательского JS
+/**
+ * Работа с пользовательским js
+ * @returns {*}
+ */
 function jsProcess() {
-    return (
-        gulp
-            .src(['src/js/app.js'])
-            .pipe(beautify())
-            .pipe(gulp.dest('./dist/js'))
-    );
+  return gulp
+    .src([src.js + '/app.js'])
+    .pipe(beautify())
+    .pipe(babel())
+    .pipe(gulp.dest(dist.js));
 }
 
-// Компиляция JS  для Production
-function jsProcessBuild() {
-    return (
-        gulp
-            .src(['src/js/app.js'])
-            .pipe(babel())
-            .pipe(uglify())
-            .pipe(gulp.dest('./dist/js'))
-    );
-}
-
-// Наблюдение за изменениями
+/**
+ * Наблюдение за изменениями в файлах
+ */
 function watchFiles() {
-    gulp.watch('src/**/*.html', gulp.series(htmlProcess, browserSyncReload));
-    gulp.watch('src/css/**/*.*', gulp.series(cssProcess, browserSyncReload));
-    gulp.watch('src/sass/**/*.*', gulp.series(scssProcess, browserSyncReload));
-    gulp.watch('src/js/!(app)*.js', gulp.series(libsJsProcess, browserSyncReload));
-    gulp.watch('src/js/app.js', gulp.series(jsProcess, browserSyncReload));
-    gulp.watch('src/img/**/*.*', gulp.series(imgProcessWatch, browserSyncReload));
-    gulp.watch('src/fonts/*.*', gulp.series(fontsProcess, browserSyncReload));
+  gulp.watch(src.html, gulp.series(htmlProcess, browserSyncReload));
+  gulp.watch(src.css, gulp.series(cssProcess, browserSyncReload));
+  gulp.watch(src.scss + '/**/*.*', gulp.series(scssProcess, browserSyncReload));
+  gulp.watch(
+    src.js + '/!(app)*.js',
+    gulp.series(libsJsProcess, browserSyncReload),
+  );
+  gulp.watch(src.js + '/app.js', gulp.series(jsProcess, browserSyncReload));
+  gulp.watch(src.img, gulp.series(imgProcess, browserSyncReload));
+  gulp.watch(src.fonts, gulp.series(copyFonts, browserSyncReload));
 }
 
-// Определение основных переменных
 const build = gulp.series(
-    clean,
-    gulp.parallel(htmlProcess, cssProcess, scssProcessBuild, libsJsProcess, jsProcessBuild, fontsProcess, imgProcessBuild, imgProcessWebp)
+  clean,
+  gulp.parallel(
+    htmlProcess,
+    cssProcess,
+    libsJsProcess,
+    jsProcess,
+    scssProcess,
+    imgProcess,
+    copyFonts,
+  ),
 );
 
-const dev = gulp.series(
-    clean,
-    gulp.parallel(htmlProcess, cssProcess, scssProcess, libsJsProcess, jsProcess, fontsProcess, imgProcessBuild, imgProcessWebp)
-);
+const watch = gulp.parallel(build, watchFiles, browserSyncInit);
 
-const watchEvent = gulp.series(
-    clean,
-    gulp.parallel(htmlProcess, cssProcess, scssProcess, libsJsProcess, jsProcess, fontsProcess, imgProcessWatch)
-);
-
-const watch = gulp.parallel(watchEvent, watchFiles, browserSyncInit);
-
-// Экспорт
 exports.build = build;
-exports.dev = dev;
 exports.default = watch;
-exports.watch = watch;

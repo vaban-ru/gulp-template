@@ -57,9 +57,8 @@ gulp-template
  
  ## Верстка
 Команды для сборки:
- - `gulp` запускает сборку и локальный сервер с Hot Reloading
- - `gulp dev` запускает сборку и на выходе получаем не минифицированные  файлы app.js и app.css
- - `gulp build` запускает сборку и на выходе получаем минифицированные файлы app.js и app.css
+ - `yarn start | npm run start` запускает сборку и локальный сервер с Hot Reloading
+ - `yarn build | npm run build` запускает сборку и на выходе получаем собранные, но не минифицированные  файлы app.js и app.css
  
  ## Nunjucks
  В проекте для шаблонирования используется шаблонизатор [Nunjucks](https://mozilla.github.io/nunjucks/templating.html).
