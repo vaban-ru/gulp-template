@@ -10,8 +10,6 @@
 
 ```
 gulp-template
-├── dist
-├── gulp-tasks
 ├── src
 │   ├── css
 │   ├── fonts
