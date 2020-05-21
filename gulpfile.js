@@ -20,7 +20,6 @@ const nunjucks = require('gulp-nunjucks');
 
 /**
  * Основные переменные
- * @type {{src: string, dist: string}}
  */
 const paths = {
   dist: './dist',
@@ -157,7 +156,7 @@ function imgProcess() {
 function cssProcess() {
   const plugins = [autoprefixer(), cssnano()];
   return gulp
-    .src([src.css + '/reset.css', src.css + '/grid.css', src.css + '/**/*.*'])
+    .src([src.css + '/reset.css', src.css + '/**/*.*'])
     .pipe(concat('libs.min.css'))
     .pipe(postcss(plugins))
     .pipe(gulp.dest(dist.css));
