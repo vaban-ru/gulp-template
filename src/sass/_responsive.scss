@@ -1,0 +1,30 @@
+.container {
+  max-width: 1400px;
+}
+
+/**
+  Десктоп маленький
+ */
+@media screen and (max-width: 1429px) {
+}
+
+/**
+  Планшет горизонтальный
+ */
+@media screen and (max-width: 1279px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+/**
+  Планшет вертикальный
+ */
+@media screen and (max-width: 1023px) {
+}
+
+/**
+  Мобильные устройства
+ */
+@media screen and (max-width: 767px) {
+}
