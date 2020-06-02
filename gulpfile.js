@@ -34,6 +34,7 @@ const src = {
   scss: paths.src + '/sass',
   js: paths.src + '/js',
   fonts: paths.src + '/fonts',
+  public: paths.src + '/public',
 };
 
 const dist = {
@@ -213,6 +214,10 @@ function jsProcess() {
     .pipe(gulp.dest(dist.js));
 }
 
+function publicProcess() {
+  return gulp.src([src.public + '/**/*']).pipe(gulp.dest(paths.dist));
+}
+
 /**
  * Наблюдение за изменениями в файлах
  */
@@ -227,6 +232,7 @@ function watchFiles() {
   gulp.watch(src.js + '/app.js', gulp.series(jsProcess, browserSyncReload));
   gulp.watch(src.img, gulp.series(imgProcess, browserSyncReload));
   gulp.watch(src.fonts, gulp.series(copyFonts, browserSyncReload));
+  gulp.watch(src.public, gulp.series(publicProcess, browserSyncReload));
 }
 
 const build = gulp.series(
@@ -239,6 +245,7 @@ const build = gulp.series(
     scssProcess,
     imgProcess,
     copyFonts,
+    publicProcess,
   ),
 );
 
