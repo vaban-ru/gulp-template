@@ -1,6 +1,6 @@
 {
 	"name": "gulp-template",
-	"version": "v0.6.0",
+	"version": "v0.7.0",
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
 	"license": "MIT",
 	"scripts": {
@@ -21,17 +21,17 @@
 		"gulp-cli": "^2.0.1",
 		"gulp-concat": "^2.6.1",
 		"gulp-imagemin": "^6.2.0",
+		"gulp-jsbeautifier": "^3.0.1",
+		"gulp-nunjucks": "^5.0.1",
 		"gulp-postcss": "^8.0.0",
 		"gulp-prettier": "^2.1.0",
 		"gulp-sass": "^4.0.2",
+		"gulp-sourcemaps": "^2.6.5",
 		"gulp-uglify": "^3.0.2",
 		"gulp-watch": "^5.0.1",
-		"jquery": "^3.3.1",
-		"gulp-jsbeautifier": "^3.0.1",
-		"gulp-nunjucks": "^5.0.1",
-		"gulp-sourcemaps": "^2.6.5",
 		"husky": "^4.0.6",
 		"imagemin-mozjpeg": "^8.0.0",
+		"jquery": "^3.3.1",
 		"lint-staged": "^9.5.0",
 		"prettier": "^1.19.1"
 	},
@@ -53,5 +53,8 @@
 			"prettier --write",
 			"git add"
 		]
+	},
+	"dependencies": {
+		"gulp-svg-sprite": "^1.5.0"
 	}
 }
