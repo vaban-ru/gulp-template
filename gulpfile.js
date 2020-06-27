@@ -152,7 +152,7 @@ function svgSpriteProcess() {
 function imgProcess() {
   if (arg.production === 'true') {
     return gulp
-      .src(src.img + '/**/*')
+      .src(src.img)
       .pipe(
         imagemin([
           imageminMozjpeg({
@@ -163,7 +163,7 @@ function imgProcess() {
       .pipe(gulp.dest(dist.img));
   } else {
     return gulp
-      .src(src.img + '/**/*')
+      .src(src.img)
       .pipe(changed(dist.img))
       .pipe(gulp.dest(dist.img));
   }
