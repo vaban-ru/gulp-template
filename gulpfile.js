@@ -17,7 +17,6 @@ const beautify = require('gulp-jsbeautifier');
 const sourcemaps = require('gulp-sourcemaps');
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const nunjucks = require('gulp-nunjucks');
-const svgSprite = require('gulp-svg-sprite');
 
 /**
  * Основные переменные
@@ -30,13 +29,14 @@ const paths = {
 
 const src = {
   html: paths.src + '/*.html',
+  templates: paths.src + '/templates/**/*',
   img: paths.src + '/img/**/*.*',
   css: paths.src + '/css',
   scss: paths.src + '/sass',
   js: paths.src + '/js',
-  fonts: paths.src + '/fonts/**/*.*',
+  fonts: paths.src + '/fonts',
   public: paths.src + '/public',
-  svg: paths.src + '/svg/**/*.*',
+  svg: paths.src + '/svg'
 };
 
 const dist = {
@@ -109,10 +109,11 @@ function browserSyncReload(done) {
 
 /**
  * Копирование шрифтов
+ * @param folder
  * @returns {*}
  */
 function copyFonts() {
-  return gulp.src([src.fonts]).pipe(gulp.dest(dist.fonts));
+  return gulp.src([src.fonts + '/**/*']).pipe(gulp.dest(dist.fonts));
 }
 
 /**
@@ -127,26 +128,8 @@ function htmlProcess() {
 }
 
 /**
- * Генерация SVG спрайта
- * @returns {*}
- */
-function svgSpriteProcess() {
-  return gulp
-    .src([src.svg])
-    .pipe(
-      svgSprite({
-        mode: {
-          stack: {
-            sprite: '../sprite.svg',
-          },
-        },
-      }),
-    )
-    .pipe(gulp.dest(dist.img));
-}
-
-/**
  * Копирование картинок в dist или оптимизация при финишной сборке
+ * @param isBuild
  * @returns {*}
  */
 function imgProcess() {
@@ -233,10 +216,6 @@ function jsProcess() {
     .pipe(gulp.dest(dist.js));
 }
 
-/**
- * Перенос пользовательстких файлов в корень проекта при билде
- * @returns {*}
- */
 function publicProcess() {
   return gulp.src([src.public + '/**/*']).pipe(gulp.dest(paths.dist));
 }
@@ -246,6 +225,7 @@ function publicProcess() {
  */
 function watchFiles() {
   gulp.watch(src.html, gulp.series(htmlProcess, browserSyncReload));
+  gulp.watch(src.templates, gulp.series(htmlProcess, browserSyncReload));
   gulp.watch(src.css, gulp.series(cssProcess, browserSyncReload));
   gulp.watch(src.scss + '/**/*.*', gulp.series(scssProcess, browserSyncReload));
   gulp.watch(
@@ -256,7 +236,6 @@ function watchFiles() {
   gulp.watch(src.img, gulp.series(imgProcess, browserSyncReload));
   gulp.watch(src.fonts, gulp.series(copyFonts, browserSyncReload));
   gulp.watch(src.public, gulp.series(publicProcess, browserSyncReload));
-  gulp.watch(src.svg, gulp.series(svgSpriteProcess, browserSyncReload));
 }
 
 const build = gulp.series(
@@ -268,7 +247,6 @@ const build = gulp.series(
     jsProcess,
     scssProcess,
     imgProcess,
-    svgSpriteProcess,
     copyFonts,
     publicProcess,
   ),
