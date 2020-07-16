@@ -8,15 +8,14 @@ const del = require('del');
 const autoprefixer = require('autoprefixer');
 const cssnano = require('cssnano');
 const postcss = require('gulp-postcss');
-const imagemin = require('gulp-imagemin');
 const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
 const changed = require('gulp-changed');
 const prettier = require('gulp-prettier');
 const beautify = require('gulp-jsbeautifier');
 const sourcemaps = require('gulp-sourcemaps');
-const imageminMozjpeg = require('imagemin-mozjpeg');
 const nunjucks = require('gulp-nunjucks');
+const hash_src = require('gulp-hash-src');
 
 /**
  * Основные переменные
@@ -36,7 +35,7 @@ const src = {
   js: paths.src + '/js',
   fonts: paths.src + '/fonts',
   public: paths.src + '/public',
-  svg: paths.src + '/svg'
+  svg: paths.src + '/svg',
 };
 
 const dist = {
@@ -109,7 +108,6 @@ function browserSyncReload(done) {
 
 /**
  * Копирование шрифтов
- * @param folder
  * @returns {*}
  */
 function copyFonts() {
@@ -128,28 +126,38 @@ function htmlProcess() {
 }
 
 /**
+ * Добавление хеша скриптов и стилей в html для бустинга кеша
+ * @returns {*}
+ */
+function hashProcess() {
+  return gulp
+    .src(paths.dist + '/*.html')
+    .pipe(
+      hash_src({
+        build_dir: paths.dist,
+        src_path: paths.dist + '/js',
+        exts: ['.js'],
+      }),
+    )
+    .pipe(
+      hash_src({
+        build_dir: './dist',
+        src_path: paths.dist + '/css',
+        exts: ['.css'],
+      }),
+    )
+    .pipe(gulp.dest(paths.dist));
+}
+
+/**
  * Копирование картинок в dist или оптимизация при финишной сборке
- * @param isBuild
  * @returns {*}
  */
 function imgProcess() {
-  if (arg.production === 'true') {
-    return gulp
-      .src(src.img)
-      .pipe(
-        imagemin([
-          imageminMozjpeg({
-            quality: 90,
-          }),
-        ]),
-      )
-      .pipe(gulp.dest(dist.img));
-  } else {
-    return gulp
-      .src(src.img)
-      .pipe(changed(dist.img))
-      .pipe(gulp.dest(dist.img));
-  }
+  return gulp
+    .src(src.img)
+    .pipe(changed(dist.img))
+    .pipe(gulp.dest(dist.img));
 }
 
 /**
@@ -168,7 +176,6 @@ function cssProcess() {
 /**
  * Склейка и обработка scss файлов без минификации
  * Минификации нет, так как дальше эта верстка отдаётся бэкендеру для натяжки на CMS
- * @param isBuild
  * @returns {*}
  */
 function scssProcess() {
@@ -250,6 +257,7 @@ const build = gulp.series(
     copyFonts,
     publicProcess,
   ),
+  hashProcess,
 );
 
 const watch = gulp.parallel(build, watchFiles, browserSyncInit);
