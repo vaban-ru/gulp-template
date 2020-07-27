@@ -1,4 +1,4 @@
-var root = document.getElementsByTagName('html')[0];
+const root = document.getElementsByTagName('html')[0];
 if (/(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
   root.classList.add('is-mac');
 }
