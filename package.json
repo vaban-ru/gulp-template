@@ -20,21 +20,21 @@
 		"gulp-changed": "^3.2.0",
 		"gulp-cli": "^2.0.1",
 		"gulp-concat": "^2.6.1",
+		"gulp-hash-src": "^0.1.6",
 		"gulp-jsbeautifier": "^3.0.1",
 		"gulp-postcss": "^8.0.0",
+		"gulp-posthtml": "^3.0.5",
 		"gulp-prettier": "^2.1.0",
 		"gulp-sass": "^4.0.2",
 		"gulp-sourcemaps": "^2.6.5",
+		"gulp-svg-sprite": "^1.5.0",
 		"gulp-uglify": "^3.0.2",
 		"gulp-watch": "^5.0.1",
 		"husky": "^4.0.6",
 		"jquery": "^3.3.1",
 		"lint-staged": "^9.5.0",
-		"prettier": "^1.19.1",
-		"gulp-hash-src": "^0.1.6",
-		"gulp-posthtml": "^3.0.5",
-		"gulp-svg-sprite": "^1.5.0",
-		"posthtml-include": "^1.4.3"
+		"posthtml-include": "^1.4.3",
+		"prettier": "^1.19.1"
 	},
 	"husky": {
 		"hooks": {
@@ -54,5 +54,10 @@
 			"prettier --write",
 			"git add"
 		]
+	},
+	"dependencies": {
+		"posthtml-remove-attributes": "^1.0.0",
+		"posthtml-richtypo": "^1.0.2",
+		"richtypo-rules-ru": "^4.0.2"
 	}
 }

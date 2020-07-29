@@ -17,6 +17,9 @@ const sourcemaps = require('gulp-sourcemaps');
 const hash_src = require('gulp-hash-src');
 const posthtml = require('gulp-posthtml');
 const include = require('posthtml-include');
+const richtypo = require('posthtml-richtypo');
+const removeAttributes = require('posthtml-remove-attributes');
+const { quotes, sectionSigns, shortWords } = require('richtypo-rules-ru');
 
 /**
  * Основные переменные
@@ -122,7 +125,19 @@ function copyFonts() {
 function htmlProcess() {
   return gulp
     .src([src.html])
-    .pipe(posthtml([include()]))
+    .pipe(
+      posthtml([
+        include(),
+        richtypo({
+          attribute: 'data-typo',
+          rules: [quotes, sectionSigns, shortWords],
+        }),
+        removeAttributes([
+          // The only non-array argument is also possible
+          'data-typo',
+        ]),
+      ]),
+    )
     .pipe(gulp.dest(paths.dist));
 }
 
