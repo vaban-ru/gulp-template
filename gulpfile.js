@@ -14,8 +14,9 @@ const changed = require('gulp-changed');
 const prettier = require('gulp-prettier');
 const beautify = require('gulp-jsbeautifier');
 const sourcemaps = require('gulp-sourcemaps');
-const nunjucks = require('gulp-nunjucks');
 const hash_src = require('gulp-hash-src');
+const posthtml = require('gulp-posthtml');
+const include = require('posthtml-include');
 
 /**
  * Основные переменные
@@ -121,7 +122,7 @@ function copyFonts() {
 function htmlProcess() {
   return gulp
     .src([src.html])
-    .pipe(nunjucks.compile())
+    .pipe(posthtml([include()]))
     .pipe(gulp.dest(paths.dist));
 }
 
@@ -165,7 +166,12 @@ function imgProcess() {
  * @returns {*}
  */
 function cssProcess() {
-  const plugins = [autoprefixer(), cssnano()];
+  let plugins;
+  if (arg.production === 'true') {
+    plugins = [autoprefixer(), cssnano()];
+  } else {
+    plugins = [];
+  }
   return gulp
     .src([src.css + '/reset.css', src.css + '/**/*.*'])
     .pipe(concat('libs.min.css'))
@@ -203,12 +209,20 @@ function scssProcess() {
  * @returns {*}
  */
 function libsJsProcess() {
-  return gulp
-    .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
-    .pipe(concat('libs.min.js'))
-    .pipe(babel())
-    .pipe(uglify())
-    .pipe(gulp.dest(dist.js));
+  if (arg.production === 'true') {
+    return gulp
+      .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
+      .pipe(concat('libs.min.js'))
+      .pipe(babel())
+      .pipe(uglify())
+      .pipe(gulp.dest(dist.js));
+  } else {
+    return gulp
+      .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
+      .pipe(concat('libs.min.js'))
+      .pipe(babel())
+      .pipe(gulp.dest(dist.js));
+  }
 }
 
 /**
@@ -216,11 +230,18 @@ function libsJsProcess() {
  * @returns {*}
  */
 function jsProcess() {
-  return gulp
-    .src([src.js + '/app.js'])
-    .pipe(beautify())
-    .pipe(babel())
-    .pipe(gulp.dest(dist.js));
+  if (arg.production === 'true') {
+    return gulp
+      .src([src.js + '/app.js'])
+      .pipe(beautify())
+      .pipe(babel())
+      .pipe(gulp.dest(dist.js));
+  } else {
+    return gulp
+      .src([src.js + '/app.js'])
+      .pipe(babel())
+      .pipe(gulp.dest(dist.js));
+  }
 }
 
 function publicProcess() {

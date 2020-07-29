@@ -1,6 +1,6 @@
 {
 	"name": "gulp-template",
-	"version": "v1.0.0",
+	"version": "v1.1.0",
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
 	"license": "MIT",
 	"scripts": {
@@ -21,7 +21,6 @@
 		"gulp-cli": "^2.0.1",
 		"gulp-concat": "^2.6.1",
 		"gulp-jsbeautifier": "^3.0.1",
-		"gulp-nunjucks": "^5.0.1",
 		"gulp-postcss": "^8.0.0",
 		"gulp-prettier": "^2.1.0",
 		"gulp-sass": "^4.0.2",
@@ -31,7 +30,11 @@
 		"husky": "^4.0.6",
 		"jquery": "^3.3.1",
 		"lint-staged": "^9.5.0",
-		"prettier": "^1.19.1"
+		"prettier": "^1.19.1",
+		"gulp-hash-src": "^0.1.6",
+		"gulp-posthtml": "^3.0.5",
+		"gulp-svg-sprite": "^1.5.0",
+		"posthtml-include": "^1.4.3"
 	},
 	"husky": {
 		"hooks": {
@@ -51,9 +54,5 @@
 			"prettier --write",
 			"git add"
 		]
-	},
-	"dependencies": {
-		"gulp-hash-src": "^0.1.6",
-		"gulp-svg-sprite": "^1.5.0"
 	}
 }
