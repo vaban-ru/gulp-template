@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <title>Главная страница</title>
-    {% include 'templates/head.html' %}
-  </head>
-  <body>
-    {% include 'templates/header.html' %}
+<head>
+    <include src="src/templates/head.html" locals='{"title": "Главная страница"}'></include>
+</head>
+<body>
+  <include src="src/templates/header.html"></include>
 
-    {% include 'templates/footer.html' %}
-  </body>
+  <include src="src/templates/footer.html"></include>
+</body>
 </html>
