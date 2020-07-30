@@ -4,8 +4,9 @@
 ## Подготовка к работе
 
 1. `git clone git@github.com:webzlodimir/gulp-template.git`
-2. `yarn install`
-3. `yarn start`
+2. `cd gulp-template`
+3. `yarn install`
+4. `yarn start`
 
 ## Структура проекта
 
