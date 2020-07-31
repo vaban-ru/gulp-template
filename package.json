@@ -1,6 +1,6 @@
 {
 	"name": "gulp-template",
-	"version": "v1.1.1",
+	"version": "v1.1.2",
 	"author": "Vladimir Banduristov <hello@webzlodimir.ru>",
 	"license": "MIT",
 	"scripts": {
