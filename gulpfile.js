@@ -16,6 +16,7 @@ const beautify = require('gulp-jsbeautifier');
 const sourcemaps = require('gulp-sourcemaps');
 const hash_src = require('gulp-hash-src');
 const posthtml = require('gulp-posthtml');
+const svgSprite = require('gulp-svg-sprite');
 const include = require('posthtml-include');
 const richtypo = require('posthtml-richtypo');
 const removeAttributes = require('posthtml-remove-attributes');
@@ -39,7 +40,7 @@ const src = {
   js: paths.src + '/js',
   fonts: paths.src + '/fonts',
   public: paths.src + '/public',
-  svg: paths.src + '/svg',
+  svg: paths.src + '/svg/*.*',
 };
 
 const dist = {
@@ -259,6 +260,25 @@ function jsProcess() {
   }
 }
 
+/**
+ * Генерация SVG спрайта
+ */
+
+function SVGProcess() {
+  gulp
+    .src(src.svg)
+    .pipe(
+      svgSprite({
+        mode: {
+          symbol: {
+            sprite: '../sprite.svg',
+          },
+        },
+      }),
+    )
+    .pipe(gulp.dest(dist.img));
+}
+
 function publicProcess() {
   return gulp.src([src.public + '/**/*']).pipe(gulp.dest(paths.dist));
 }
@@ -277,6 +297,7 @@ function watchFiles() {
   );
   gulp.watch(src.js + '/app.js', gulp.series(jsProcess, browserSyncReload));
   gulp.watch(src.img, gulp.series(imgProcess, browserSyncReload));
+  gulp.watch(src.svg, gulp.series(SVGProcess, browserSyncReload));
   gulp.watch(src.fonts, gulp.series(copyFonts, browserSyncReload));
   gulp.watch(src.public, gulp.series(publicProcess, browserSyncReload));
 }
@@ -284,6 +305,7 @@ function watchFiles() {
 const build = gulp.series(
   clean,
   gulp.parallel(
+    SVGProcess,
     htmlProcess,
     cssProcess,
     libsJsProcess,
