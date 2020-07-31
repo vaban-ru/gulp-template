@@ -2,7 +2,7 @@
 
 const gulp = require('gulp');
 const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-uglify-es').default;
 const sass = require('gulp-sass');
 const del = require('del');
 const autoprefixer = require('autoprefixer');
