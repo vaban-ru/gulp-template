@@ -265,7 +265,7 @@ function jsProcess() {
  */
 
 function SVGProcess() {
-  gulp
+  return gulp
     .src(src.svg)
     .pipe(
       svgSprite({
