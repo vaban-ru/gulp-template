@@ -19,6 +19,7 @@ const posthtml = require('gulp-posthtml');
 const svgSprite = require('gulp-svg-sprite');
 const include = require('posthtml-include');
 const richtypo = require('posthtml-richtypo');
+const expressions = require('posthtml-expressions');
 const removeAttributes = require('posthtml-remove-attributes');
 const { quotes, sectionSigns, shortWords } = require('richtypo-rules-ru');
 
@@ -129,6 +130,7 @@ function htmlProcess() {
     .pipe(
       posthtml([
         include(),
+        expressions(),
         richtypo({
           attribute: 'data-typo',
           rules: [quotes, sectionSigns, shortWords],
@@ -260,12 +262,8 @@ function jsProcess() {
   }
 }
 
-/**
- * Генерация SVG спрайта
- */
-
 function SVGProcess() {
-  gulp
+  return gulp
     .src(src.svg)
     .pipe(
       svgSprite({
