@@ -31,7 +31,6 @@ const paths = {
   src: './src',
   maps: './maps',
 };
-
 const src = {
   html: paths.src + '/*.html',
   templates: paths.src + '/templates/**/*',
@@ -43,7 +42,6 @@ const src = {
   public: paths.src + '/public',
   svg: paths.src + '/svg/*.*',
 };
-
 const dist = {
   img: paths.dist + '/img/',
   css: paths.dist + '/css/',
@@ -209,7 +207,7 @@ function scssProcess() {
       .src([src.scss + '/app.scss'])
       .pipe(sass())
       .pipe(postcss(plugins))
-      .pipe(prettier({ singleQuote: true }))
+      .pipe(prettier())
       .pipe(gulp.dest(dist.css));
   } else {
     return gulp
@@ -253,6 +251,7 @@ function jsProcess() {
       .src([src.js + '/app.js'])
       .pipe(beautify())
       .pipe(babel())
+      .pipe(prettier())
       .pipe(gulp.dest(dist.js));
   } else {
     return gulp
@@ -262,6 +261,10 @@ function jsProcess() {
   }
 }
 
+/**
+ * Склейка SVG спрайта
+ * @returns {*}
+ */
 function SVGProcess() {
   return gulp
     .src(src.svg)
@@ -277,6 +280,10 @@ function SVGProcess() {
     .pipe(gulp.dest(dist.img));
 }
 
+/**
+ * Копирование файлов из папки public в корень сайта при сборке
+ * @returns {*}
+ */
 function publicProcess() {
   return gulp.src([src.public + '/**/*']).pipe(gulp.dest(paths.dist));
 }
