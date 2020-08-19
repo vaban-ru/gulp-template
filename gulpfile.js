@@ -201,7 +201,7 @@ function cssProcess() {
  * @returns {*}
  */
 function scssProcess() {
-  const plugins = [autoprefixer()];
+  const plugins = [autoprefixer({ grid: true })];
   if (arg.production === 'true') {
     return gulp
       .src([src.scss + '/app.scss'])
@@ -225,20 +225,12 @@ function scssProcess() {
  * @returns {*}
  */
 function libsJsProcess() {
-  if (arg.production === 'true') {
-    return gulp
-      .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
-      .pipe(concat('libs.min.js'))
-      .pipe(babel())
-      .pipe(uglify())
-      .pipe(gulp.dest(dist.js));
-  } else {
-    return gulp
-      .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
-      .pipe(concat('libs.min.js'))
-      .pipe(babel())
-      .pipe(gulp.dest(dist.js));
-  }
+  return gulp
+    .src(['node_modules/jquery/dist/jquery.min.js', src.js + '/!(app)*.js'])
+    .pipe(concat('libs.min.js'))
+    .pipe(babel())
+    .pipe(uglify({ output: { quote_keys: true, ascii_only: true } }))
+    .pipe(gulp.dest(dist.js));
 }
 
 /**
@@ -285,7 +277,9 @@ function SVGProcess() {
  * @returns {*}
  */
 function publicProcess() {
-  return gulp.src([src.public + '/**/*']).pipe(gulp.dest(paths.dist));
+  return gulp
+    .src([src.public + '/**/*.*', src.public + '/**/.*'])
+    .pipe(gulp.dest(paths.dist));
 }
 
 /**
