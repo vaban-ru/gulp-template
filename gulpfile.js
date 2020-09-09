@@ -32,8 +32,8 @@ const paths = {
   maps: './maps',
 };
 const src = {
-  html: paths.src + '/*.html',
-  templates: paths.src + '/templates/**/*',
+  html: paths.src + '/pages/*.html',
+  templates: paths.src + '/templates/**/*.html',
   img: paths.src + '/img/**/*.*',
   css: paths.src + '/css',
   scss: paths.src + '/sass',
